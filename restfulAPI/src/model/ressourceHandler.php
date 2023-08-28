@@ -3,7 +3,6 @@
 function getRessources($ressourceId, $ressourceType)
 {
     switch ($_SERVER["CONTENT_TYPE"]) {
-
         case "application/json":
             header('Content-Type: application/json');
             return getRessourcesJson($ressourceId, $ressourceType);
@@ -17,7 +16,7 @@ function getRessources($ressourceId, $ressourceType)
             return getRessourcesGPS($ressourceId);
 
         default:
-            http_response_code(404);
+            http_response_code(500);
             break;
     }
 }
