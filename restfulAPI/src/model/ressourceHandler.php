@@ -17,7 +17,7 @@ function getRessources($ressourceId, $ressourceType)
             return getRessourcesGPS($ressourceId);
 
         default:
-            echo "404";
+            http_response_code(404);
             break;
     }
 }
