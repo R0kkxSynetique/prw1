@@ -17,19 +17,24 @@ function route($request)
 function get($request)
 {
     $request = explode("/", $request);
-    switch ($request[1]) {
+
+    $resourceType = $request[1];
+    $resourceId = $request[2] ?? NULL;
+
+    
+    switch ($resourceType) {
         case 'people':
-            $content = getRessources($request[2],"people");
+            $content = getResource($resourceId, $resourceType);
             response($content);
             break;
 
         case 'cities':
-            $content = getRessources($request[2], "cities");
+            $content = getResource($resourceId, $resourceType);
             response($content);
             break;
             
         default:
-            echo "404";
+            http_response_code(500);
             break;
     } 
 }
