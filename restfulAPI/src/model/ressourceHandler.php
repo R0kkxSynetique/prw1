@@ -1,8 +1,12 @@
 <?php
 
-function getResource($ressourceId=NULL, $ressourceType)
+function getResource($ressourceId = NULL, $ressourceType)
 {
-    switch ($_SERVER["CONTENT_TYPE"]) {
+    $accepted_type = $_SERVER["HTTP_ACCEPT"];
+
+    $accepted_type = explode(",", $accepted_type);
+
+    switch ($accepted_type[0]) {
         case "application/json":
             header('Content-Type: application/json');
             if (!$ressourceId) return getResourcesList($ressourceType);
@@ -13,8 +17,9 @@ function getResource($ressourceId=NULL, $ressourceType)
             return getResourceImage($ressourceId);
 
         case "application/x-gps":
-            header('Content-Type: application/x-gps');
-            return getResourceGPS($ressourceId);
+            $url = getResourceGPS($ressourceId);
+            header("Location: $url");
+            break;
 
         case "*/*":
             header('Content-Type: application/json');
@@ -22,9 +27,7 @@ function getResource($ressourceId=NULL, $ressourceType)
             return getResourceJson($ressourceId, $ressourceType);
 
         default:
-            header('Content-Type: application/json');
-            if (!$ressourceId) return getResourcesList($ressourceType);
-            return getResourceJson($ressourceId, $ressourceType);
+            http_response_code(406);
             break;
     }
 }
@@ -40,23 +43,58 @@ function getResourceJson($ressourceId, $ressourceType)
             $path = "../src/data/$ressourceType/$ressourceId/city.json";
             break;
     }
-    return file_get_contents($path);
+
+    if (file_exists($path)) {
+        return file_get_contents($path);
+    } else {
+        http_response_code(404);
+    }
 }
 
 function getResourceImage($ressourceId)
 {
-    echo file_get_contents("../src/data/people/$ressourceId/avatar.png");
+    $path = "../src/data/people/$ressourceId/avatar.png";
+
+    if (file_exists($path)) {
+        echo file_get_contents($path);
+    } else {
+        http_response_code(404);
+    }
 }
 
 function getResourceGPS($ressourceId)
 {
-    return file_get_contents("../src/data/cities/$ressourceId/gps.json");
+    $path = "../src/data/cities/$ressourceId/gps.json";
+
+    if (file_exists($path)) {
+        $data = json_decode(file_get_contents($path));
+
+        $longitude = $data->longitude;
+        $latitude = $data->latitude;
+
+        $url = "https://www.google.com/maps/place/$longitude+$latitude";
+
+        return $url;
+    } else {
+        http_response_code(404);
+    }
 }
 
-function getResourcesList()
+function getResourcesList($ressourceType)
 {
-    foreach (glob("../src/data/people/*") as $filename) {
-        $ressources[] = json_decode(file_get_contents($filename . "/person.json"));
+    switch ($ressourceType) {
+        case "people":
+            $path = "../src/data/people/*";
+            $file = "/person.json";
+            break;
+
+        case "cities":
+            $path = "../src/data/cities/*";
+            $file = "/city.json";
+            break;
+    }
+    foreach (glob($path) as $filename) {
+        $ressources[] = json_decode(file_get_contents($filename . $file));
     }
     return json_encode($ressources);
 }

@@ -21,7 +21,7 @@ function get($request)
     $resourceType = $request[1];
     $resourceId = $request[2] ?? NULL;
 
-    
+
     switch ($resourceType) {
         case 'people':
             $content = getResource($resourceId, $resourceType);
@@ -32,11 +32,11 @@ function get($request)
             $content = getResource($resourceId, $resourceType);
             response($content);
             break;
-            
+
         default:
             http_response_code(500);
             break;
-    } 
+    }
 }
 
 function response($response)
