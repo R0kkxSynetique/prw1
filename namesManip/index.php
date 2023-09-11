@@ -29,7 +29,7 @@ function formatArrayToString($users)
     return implode(" - ", $users);
 }
 
-$validUsers = getUsersByFirstLastnameLetter("J", $users, $validUsers);
+$validUsers = getUsersByFirstLastnameLetter("J", $users);
 $validUsers = getUsersLastname($validUsers);
 $validUsers = formatArrayToString($validUsers);
 
