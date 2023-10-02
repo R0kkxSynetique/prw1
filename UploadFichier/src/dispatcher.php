@@ -59,6 +59,15 @@ function dispatch($bag)
         $bag['category'] = urldecode($matches[1]);
     }
     //-----------------------------------------------------------------------------
+    // todo pass the handler method as a parameter to avoid having to create a new controller for each method
+    elseif (preg_match('/^\/images\/upload$/', $bag['route'], $matches)) {
+        if ($bag['method'] == 'POST') {
+            $bag['handler']  = 'controllers/images/upload';
+        } elseif ($bag['method'] == 'GET') {
+            $bag['handler']  = 'controllers/images/uploadView';
+        }
+    }
+    //-----------------------------------------------------------------------------
     else {
         $bag['status_code'] = 404;
     }
