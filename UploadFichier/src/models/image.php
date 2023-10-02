@@ -18,3 +18,13 @@ function getAllCategories()
 {
     return array_unique(array_map(function($path) { $parts = explode('/', $path); return end($parts); }, glob(PICTURES_DIR."/*/*")));
 }
+
+function uploadImage($category, $username, $image)
+{
+    $target_dir = PICTURES_DIR . "/$username/$category";
+    if (!file_exists($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+    $target_file = $target_dir . '/' . basename($image['name']);
+    move_uploaded_file($image['tmp_name'], $target_file);
+}
