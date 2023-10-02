@@ -28,6 +28,7 @@
           <ul class="nav navbar-nav">
           <?php if ($bag['current_user'] ?? null): ?>
             <li><div class="navbar-text"><?= $bag['current_user']['name'] ?></div></li>
+            <li><a href="<?= route('images/upload') ?>" class="btn">Upload</a></li>
             <li><form class="navbar-form" method="post" action="<?= route('logout') ?>"><button type="submit" class="btn btn-link navbar-link">Se déconnecter</button></form>
           <?php else: ?>
             <li><a href="<?= route('login') ?>" class="btn">Connexion</a></li>
