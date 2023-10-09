@@ -14,7 +14,7 @@
             <?php endif; ?>
         </div>
         <div>
-            <input type="file" name="image" accept="image/jpeg,image/png,image/gif" required>
+            <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/svg+xml" required>
         </div>
         <?php if ($data['image_error'] ?? null) : ?>
             <span class="help-block"><?= $data['image_error'] ?></span>
